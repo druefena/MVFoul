@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Single-View VARS
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Dominic
+    family-names: Ruefenacht
+    email: dominic.ruefenacht@gmail.com
+    orcid: 'https://orcid.org/0000-0002-1450-8070'
+repository-code: 'https://github.com/druefena/MVFoul'
+abstract: >-
+  Single-View VARS model as part of the Soccernet 2024
+  challenge.
+keywords:
+  - VARS
+  - Soccernet
+license: GPL-3.0
+version: 1.0.0
+date-released: '2024-06-04'
