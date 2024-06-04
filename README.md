@@ -2,7 +2,16 @@
 ## Single-View Foul Recognition
 This repo contains all the code and instructions necessary to reproduce the results of the MobiusLabs submission to the 2024 Soccernet Multi-view Foul Recognition challenge. It is a fork from the original repo [here](https://github.com/SoccerNet/sn-mvfoul).
 
-While the challenge contains multiple views per foul, the proposed model solely relies on view 0, which is the live feed of the main camera. 
+While the challenge contains multiple views per foul, the proposed model solely relies on view 0 (i.e., the live feed of the main camera). We do this as we find some issues with the replays, as the temporal upsampling applied to match the framerate of the original video has introduced some temporal artefacts. We use the multidim stacker architecture proposed originally for ball action recognition. Due to its efficient stacking of grayscale frames, it allows to input 15 720p resolution frames, which allows us to only consider view 0 as the resolution is high enough to capture enough details around the actual foul, which only captures a fraction of the frame in view 0. 
+
+![My Image](images/foul_overview.png)
+
+We use the weights pretrained on the action recognition dataset, and finetune on the train/validation set for 50 epochs. Compared to the baseline, we introduce the following main changes:
+* The feature extraction backbone is ConvNet based, which makes the whole model smaller and thus allows to use high-resolution input
+* We only use view 0 as input and operate on 720p input
+* Modified data augmentation pipeline, with slightly less aggressive parameters
+* Adding non-linear activations (SiLU) and dropout regularization in between the MLP layers
+* We train using float16, which allows to roughly double the batch size
 
 ## Steps to reproduce the submitted result
 
@@ -46,6 +55,24 @@ Go to the root of this repo and run:
 
 ```
 python main.py --path /path/to/720p/videos/ --GPU 0 --model_name MULTDIMSTACKER_VIEW0 --temp_stride 1 --pooling multidim_stacking --pre_model multidim_stacker --fp16 --decode_height 726 --N_frames 15 --only_evaluation 2 --path_to_model_weights './model_weights/10_model.pth.tar' --use_tta --view_mode only_view0
+```
+
+**Important**: The model was trained on 720 videos, so make sure you are using those as input.
+
+The model used above should get the following result on the test set:
+```
+TEST
+{
+'accuracy_offence_severity': 32.669322709163346, 
+'accuracy_action': 29.482071713147413, 
+'dist_offence_gt': array([ 21., 157.,  68.,   5.]), 
+'per_class_offence': array([0.47619048, 0.27388535, 0.39705882, 0.4       ]), 
+'balanced_accuracy_offence_severity': 38.67836625095899, 
+'dist_action_gt': array([ 43., 107.,   6.,  28.,   5.,  11.,  46.,   5.]), 
+'per_class_action': array([0.62790698, 0.19626168, 0.33333333, 0.32142857, 0.6       ,    0.63636364, 0.        , 1.        ]), 
+'balanced_accuracy_action': 46.44117750140897, 
+'leaderboard_value': 42.55977187618398
+}
 ```
 
 
