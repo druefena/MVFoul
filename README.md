@@ -84,12 +84,12 @@ See the [License](LICENSE) file for details.
 
 Please cite this repo if you use this code:
 ```
-@software{Ruefenacht_Single-View_VARS_2024,
+@misc{RuefenachtVARS2024,
 author = {Ruefenacht, Dominic},
 license = {GPL-3.0},
 month = jun,
 title = {{Single-View VARS}},
-url = {https://github.com/druefena/MVFoul},
+howpublished = {\url{https://github.com/druefena/MVFoul}},
 version = {1.0.0},
 year = {2024}
 }
